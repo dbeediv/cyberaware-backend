@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Important — Transaction Alert</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:480px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#f57c00; padding:20px 28px; color:white; }
+    .header h2 { font-size:18px; }
+    .content { padding:28px; }
+    .transaction { background:#fff8e1; border:1px solid #ffd54f; border-radius:8px; padding:20px; margin-bottom:20px; text-align:center; }
+    .amount { font-size:36px; font-weight:700; color:#f57c00; margin:8px 0; }
+    .transaction p { font-size:13px; color:#666; }
+    .legal { background:#fff3f3; border:1px solid #ffcccc; padding:14px; border-radius:4px; margin-bottom:20px; font-size:13px; color:#c00; line-height:1.6; }
+    .timer { text-align:center; font-size:14px; color:#dc3545; font-weight:600; margin-bottom:20px; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:14px; font-size:14px; border-radius:4px; }
+    .return-btn { background:#f57c00; color:white; border:none; padding:13px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header"><h2>⚠️ Urgent Transaction Alert — Action Required</h2></div>
+    <div class="content">
+      <div class="transaction">
+        <p>Amount Credited by Mistake</p>
+        <div class="amount">₹50,000</div>
+        <p>Ref No: TXN2025040500847</p>
+        <p>Date: 05 April 2025, 09:32 AM</p>
+      </div>
+      <div class="legal">
+        ⚖️ As per RBI guidelines Section 6(2), retaining funds credited by mistake constitutes a criminal offence punishable under IPC Section 403. You are legally required to return this amount within <strong>48 hours</strong>.
+      </div>
+      <div class="timer">⏰ Time remaining to avoid legal action: <span id="timer">47:58:32</span></div>
+      <label>Your Account Number</label>
+      <input type="text" placeholder="Enter your account number"/>
+      <label>Registered Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX"/>
+      <label>Transaction Password</label>
+      <input type="password" placeholder="Enter transaction password"/>
+      <button class="return-btn" onclick="returnAmount()">Return Amount & Close Case</button>
+      <div class="footer">🔒 RBI Compliance Portal — Secured</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    let seconds = 172712;
+    setInterval(() => {
+      seconds--;
+      const h = Math.floor(seconds/3600);
+      const m = Math.floor((seconds%3600)/60);
+      const s = seconds%60;
+      document.getElementById('timer').textContent =
+        `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }, 1000);
+    async function returnAmount() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HR Portal — Salary Revision Letter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f2f5; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:500px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:linear-gradient(135deg,#1a6e3c,#2ecc71); padding:28px 32px; color:white; }
+    .header h2 { font-size:20px; margin-bottom:4px; }
+    .header p { font-size:13px; opacity:0.85; }
+    .confidential { background:#fff8e1; border-left:4px solid #ffc107; padding:12px 16px; margin:20px 24px; font-size:13px; color:#856404; }
+    .content { padding:0 32px 32px; }
+    .letter { background:#f9f9f9; border:1px solid #e0e0e0; padding:24px; border-radius:4px; margin:20px 0; font-size:14px; line-height:1.8; color:#333; }
+    .revision-table { width:100%; border-collapse:collapse; margin:16px 0; }
+    .revision-table th { background:#1a6e3c; color:white; padding:10px; text-align:left; font-size:13px; }
+    .revision-table td { padding:10px; border-bottom:1px solid #eee; font-size:13px; }
+    .revision-table tr:last-child td { font-weight:700; color:#1a6e3c; font-size:15px; }
+    .action-box { background:#f0fff4; border:1px solid #c3e6cb; padding:16px; border-radius:4px; margin-top:16px; }
+    .action-box p { font-size:13px; color:#155724; margin-bottom:12px; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:10px; font-size:14px; border-radius:4px; }
+    .view-btn { background:#1a6e3c; color:white; border:none; padding:12px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .view-btn:hover { background:#155a30; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <h2>🎉 Salary Revision & Bonus Letter</h2>
+      <p>Human Resources Department — Confidential</p>
+    </div>
+
+    <div class="confidential">
+      🔒 CONFIDENTIAL — This document is intended only for the named employee
+    </div>
+
+    <div class="content">
+      <div class="letter">
+        <p>Dear Employee,</p><br/>
+        <p>We are pleased to inform you that following your outstanding performance review,
+        the management has approved your salary revision effective <strong>1st April 2025</strong>.</p><br/>
+        <p>Please find your revised compensation details below:</p>
+
+        <table class="revision-table">
+          <tr>
+            <th>Component</th>
+            <th>Previous (Annual)</th>
+            <th>Revised (Annual)</th>
+          </tr>
+          <tr>
+            <td>Base Salary</td>
+            <td>₹6,00,000</td>
+            <td>₹7,20,000</td>
+          </tr>
+          <tr>
+            <td>Performance Bonus</td>
+            <td>₹50,000</td>
+            <td>₹1,00,000</td>
+          </tr>
+          <tr>
+            <td>Total CTC</td>
+            <td>₹6,50,000</td>
+            <td>₹8,20,000</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="action-box">
+        <p>Please verify your identity to access and download your official salary revision letter and bonus details.</p>
+        <input type="text" placeholder="Employee ID"/>
+        <input type="password" placeholder="HR Portal Password"/>
+        <button class="view-btn" onclick="viewLetter()">View My Salary Letter & Bonus Details</button>
+        <div class="footer">🔒 HR Portal — Secured & Encrypted</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+
+    async function viewLetter() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method: 'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

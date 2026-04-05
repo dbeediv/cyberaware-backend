@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FedEx — Delivery Failed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:460px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#4d148c; padding:20px 28px; color:white; display:flex; align-items:center; gap:12px; }
+    .fedex-logo { font-size:24px; font-weight:900; color:white; }
+    .fedex-logo span { color:#ff6600; }
+    .header p { font-size:12px; opacity:0.85; }
+    .alert { background:#ff6600; color:white; padding:12px 28px; font-size:13px; font-weight:600; }
+    .content { padding:28px; }
+    .tracking { background:#f9f9f9; border:1px solid #e0e0e0; padding:16px; border-radius:4px; margin-bottom:20px; }
+    .tracking-row { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; }
+    .tracking-row span:first-child { color:#666; }
+    .steps { margin-bottom:20px; }
+    .step { display:flex; align-items:center; gap:10px; padding:8px 0; font-size:13px; }
+    .step-icon { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; }
+    .step-icon.done { background:#1b5e20; color:white; }
+    .step-icon.failed { background:#dc3545; color:white; }
+    .fee-box { background:#fff8e1; border:1px solid #ffd54f; padding:16px; border-radius:4px; margin-bottom:20px; text-align:center; }
+    .fee-amount { font-size:28px; font-weight:700; color:#f57c00; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:14px; font-size:14px; border-radius:4px; }
+    .pay-btn { background:#4d148c; color:white; border:none; padding:13px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <div>
+        <div class="fedex-logo">Fed<span>Ex</span></div>
+        <p>Express Delivery Services</p>
+      </div>
+    </div>
+    <div class="alert">📦 Delivery Attempt Failed — Action Required</div>
+    <div class="content">
+      <div class="tracking">
+        <div class="tracking-row"><span>Tracking No.</span><span>FX2025040500847IN</span></div>
+        <div class="tracking-row"><span>From</span><span>Amazon Seller Services</span></div>
+        <div class="tracking-row"><span>To</span><span>Your Address</span></div>
+        <div class="tracking-row"><span>Status</span><span style="color:#dc3545;font-weight:600;">Failed — Customs Hold</span></div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-icon done">✓</div><span>Package dispatched from warehouse</span></div>
+        <div class="step"><div class="step-icon done">✓</div><span>Package arrived at local facility</span></div>
+        <div class="step"><div class="step-icon failed">✗</div><span><strong>Delivery failed — Customs fee pending</strong></span></div>
+      </div>
+      <div class="fee-box">
+        <div style="font-size:13px;color:#666;margin-bottom:4px;">Customs & Handling Fee Due</div>
+        <div class="fee-amount">₹25</div>
+        <div style="font-size:12px;color:#999;margin-top:4px;">Pay to release your package</div>
+      </div>
+      <label>Full Name</label>
+      <input type="text" placeholder="Enter your name"/>
+      <label>Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX"/>
+      <button class="pay-btn" onclick="pay()">Pay ₹25 & Reschedule Delivery</button>
+      <div class="footer">🔒 FedEx Secure Payment Portal</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    async function pay() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

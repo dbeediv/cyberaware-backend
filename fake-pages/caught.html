@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CyberAware — You Were Phished!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#080b12; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:#0e1420; border:1px solid rgba(255,255,255,0.07); width:560px; border-radius:16px; overflow:hidden; }
+    .alert-header { background:linear-gradient(135deg,#ff4466,#cc2244); padding:32px; text-align:center; color:white; }
+    .alert-icon { font-size:64px; margin-bottom:12px; }
+    .alert-header h1 { font-size:28px; font-weight:700; margin-bottom:8px; }
+    .alert-header p { font-size:15px; opacity:0.9; }
+    .content { padding:32px; }
+    .score-change { background:#1a0a0f; border:1px solid #ff4466; border-radius:8px; padding:16px; text-align:center; margin-bottom:24px; }
+    .score-change p { color:#ff4466; font-size:13px; margin-bottom:4px; }
+    .score-change .points { font-size:32px; font-weight:700; color:#ff4466; }
+    .lessons { margin-bottom:24px; }
+    .lessons h3 { color:#e8eaf0; font-size:15px; margin-bottom:12px; }
+    .lesson { display:flex; gap:12px; padding:12px; background:#141b28; border-radius:8px; margin-bottom:8px; }
+    .lesson-icon { font-size:20px; flex-shrink:0; }
+    .lesson-text { font-size:13px; color:#8892a4; line-height:1.5; }
+    .lesson-text strong { color:#e8eaf0; display:block; margin-bottom:2px; }
+    .training-btn { background:linear-gradient(135deg,#00d4ff,#0099cc); color:#080b12; border:none; padding:14px; width:100%; font-size:15px; cursor:pointer; border-radius:8px; font-weight:700; margin-bottom:12px; }
+    .dashboard-btn { background:transparent; color:#8892a4; border:1px solid rgba(255,255,255,0.07); padding:12px; width:100%; font-size:14px; cursor:pointer; border-radius:8px; }
+    .dashboard-btn:hover { color:#e8eaf0; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="alert-header">
+      <div class="alert-icon">🎣</div>
+      <h1>You Were Phished!</h1>
+      <p>This was a simulated attack by your organization's security team</p>
+    </div>
+    <div class="content">
+      <div class="score-change">
+        <p>Your CyberAware Score</p>
+        <div class="points">-30 Points</div>
+        <p>Don't worry — complete the training to earn points back!</p>
+      </div>
+      <div class="lessons">
+        <h3>🔍 What You Should Have Noticed:</h3>
+        <div class="lesson">
+          <div class="lesson-icon">🔗</div>
+          <div class="lesson-text">
+            <strong>Suspicious URL</strong>
+            The link didn't go to the official website. Always check the full URL before clicking.
+          </div>
+        </div>
+        <div class="lesson">
+          <div class="lesson-icon">⚡</div>
+          <div class="lesson-text">
+            <strong>Urgency & Fear Tactics</strong>
+            Scammers create panic to make you act without thinking. Legitimate companies don't threaten immediate action.
+          </div>
+        </div>
+        <div class="lesson">
+          <div class="lesson-icon">🔐</div>
+          <div class="lesson-text">
+            <strong>Credential Harvesting</strong>
+            Never enter your password or OTP on a page you reached by clicking an email/SMS link.
+          </div>
+        </div>
+        <div class="lesson">
+          <div class="lesson-icon">📧</div>
+          <div class="lesson-text">
+            <strong>Verify the Sender</strong>
+            Always verify requests through official channels — call the bank/company directly.
+          </div>
+        </div>
+      </div>
+      <button class="training-btn" onclick="startTraining()">✅ Start Training Module (+10 Points)</button>
+      <button class="dashboard-btn" onclick="goDashboard()">Return to Dashboard</button>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    async function startTraining() {
+      await fetch(`${SERVER}/track?uid=${uid}&event=training`, { method:'POST' });
+      alert('Training complete! +10 points added to your score.');
+      goDashboard();
+    }
+    function goDashboard() {
+      window.location.href = 'https://cyberaware.vercel.app';
+    }
+  </script>
+</body>
+</html>

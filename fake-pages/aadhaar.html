@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UIDAI — Aadhaar KYC Update</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:480px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#1a237e; padding:20px 28px; color:white; display:flex; align-items:center; gap:16px; }
+    .uidai-logo { background:white; border-radius:50%; width:48px; height:48px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#1a237e; font-size:12px; }
+    .header h2 { font-size:17px; }
+    .header p { font-size:12px; opacity:0.85; }
+    .urgent { background:#dc3545; color:white; padding:10px 28px; font-size:13px; }
+    .content { padding:28px; }
+    .notice { background:#e8eaf6; border-left:4px solid #1a237e; padding:14px; margin-bottom:20px; font-size:13px; color:#333; line-height:1.6; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:14px; font-size:14px; border-radius:4px; }
+    input:focus { outline:none; border-color:#1a237e; }
+    .submit-btn { background:#1a237e; color:white; border:none; padding:13px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <div class="uidai-logo">UIDAI</div>
+      <div>
+        <h2>Aadhaar KYC Update Portal</h2>
+        <p>Unique Identification Authority of India</p>
+      </div>
+    </div>
+    <div class="urgent">🚨 URGENT: Your Aadhaar linked mobile will be deactivated in 24 hours</div>
+    <div class="content">
+      <div class="notice">As per UIDAI circular dated 01/04/2025, all Aadhaar holders must update their KYC to continue using Aadhaar-linked services including mobile banking, UPI, and government schemes.</div>
+      <label>Aadhaar Number</label>
+      <input type="text" placeholder="XXXX XXXX XXXX" maxlength="14"/>
+      <label>Full Name (as per Aadhaar)</label>
+      <input type="text" placeholder="Enter full name"/>
+      <label>Date of Birth</label>
+      <input type="date"/>
+      <label>Registered Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX"/>
+      <label>OTP (sent to your mobile)</label>
+      <input type="text" placeholder="Enter 6-digit OTP" maxlength="6"/>
+      <button class="submit-btn" onclick="submit()">Update Aadhaar KYC</button>
+      <div class="footer">🔒 UIDAI Official Portal — Government of India</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    async function submit() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

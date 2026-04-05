@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Invoice Approval Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f5f5f5; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; padding:40px; width:480px; box-shadow:0 2px 8px rgba(0,0,0,0.15); border-top:4px solid #c00; }
+    .header { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+    .company-logo { width:40px; height:40px; background:#c00; border-radius:6px; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:18px; }
+    h2 { font-size:20px; color:#1b1b1b; }
+    .invoice-box { background:#f9f9f9; border:1px solid #ddd; padding:20px; border-radius:4px; margin-bottom:24px; }
+    .invoice-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee; font-size:14px; }
+    .invoice-row:last-child { border-bottom:none; font-weight:700; font-size:16px; color:#c00; }
+    .urgent { background:#fff3f3; border:1px solid #ffcccc; padding:12px; border-radius:4px; margin-bottom:20px; font-size:13px; color:#c00; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:12px; font-size:14px; border-radius:4px; }
+    .approve-btn { background:#c00; color:white; border:none; padding:12px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .approve-btn:hover { background:#a00; }
+    .footer-note { font-size:11px; color:#999; margin-top:12px; text-align:center; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <div class="company-logo">C</div>
+      <div>
+        <h2>Invoice Approval Required</h2>
+        <div style="font-size:12px;color:#999">Secure Payment Portal</div>
+      </div>
+    </div>
+
+    <div class="urgent">
+      ⚠️ URGENT: CEO has requested immediate approval before 5:00 PM today
+    </div>
+
+    <div class="invoice-box">
+      <div class="invoice-row">
+        <span>Invoice No.</span>
+        <span>INV-2025-0847</span>
+      </div>
+      <div class="invoice-row">
+        <span>Vendor</span>
+        <span>TechSupply Solutions Pvt Ltd</span>
+      </div>
+      <div class="invoice-row">
+        <span>Date</span>
+        <span>05 Apr 2025</span>
+      </div>
+      <div class="invoice-row">
+        <span>Description</span>
+        <span>Q1 Infrastructure Services</span>
+      </div>
+      <div class="invoice-row">
+        <span>Total Amount</span>
+        <span>₹4,50,000</span>
+      </div>
+    </div>
+
+    <input type="text" placeholder="Enter your employee ID"/>
+    <input type="password" placeholder="Enter approval PIN"/>
+
+    <button class="approve-btn" onclick="approve()">Approve & Process Payment</button>
+    <div class="footer-note">🔒 Secured by Corporate Finance Portal v2.1</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+
+    async function approve() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method: 'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

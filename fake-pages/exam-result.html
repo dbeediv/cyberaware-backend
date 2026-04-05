@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Board Results — Student Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:460px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#1b5e20; padding:20px 28px; color:white; text-align:center; }
+    .header h2 { font-size:18px; }
+    .header p { font-size:12px; opacity:0.85; margin-top:4px; }
+    .notice { background:#e8f5e9; border:1px solid #a5d6a7; padding:14px 28px; font-size:13px; color:#1b5e20; text-align:center; }
+    .content { padding:28px; }
+    .exam-info { background:#f9f9f9; border:1px solid #e0e0e0; padding:16px; border-radius:4px; margin-bottom:20px; }
+    .exam-row { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; }
+    .exam-row span:first-child { color:#666; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:14px; font-size:14px; border-radius:4px; }
+    input:focus { outline:none; border-color:#1b5e20; }
+    .view-btn { background:#1b5e20; color:white; border:none; padding:13px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <h2>📋 Maharashtra State Board</h2>
+      <p>HSC / SSC Examination Results 2025</p>
+    </div>
+    <div class="notice">✅ Results for March 2025 examination have been declared!</div>
+    <div class="content">
+      <div class="exam-info">
+        <div class="exam-row"><span>Examination</span><span>HSC March 2025</span></div>
+        <div class="exam-row"><span>Board</span><span>Maharashtra State Board</span></div>
+        <div class="exam-row"><span>Result Date</span><span>05 April 2025</span></div>
+        <div class="exam-row"><span>Status</span><span style="color:#1b5e20;font-weight:600;">✅ Declared</span></div>
+      </div>
+      <label>Roll Number</label>
+      <input type="text" placeholder="Enter your roll number"/>
+      <label>Mother's Name</label>
+      <input type="text" placeholder="Enter mother's first name"/>
+      <label>Date of Birth</label>
+      <input type="date"/>
+      <button class="view-btn" onclick="viewResult()">View My Result</button>
+      <div class="footer">Official Maharashtra State Board Result Portal</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    async function viewResult() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

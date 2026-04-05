@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SBI — OTP Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:460px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#2d6cc4; padding:20px 28px; color:white; display:flex; align-items:center; gap:12px; }
+    .sbi-logo { width:48px; height:48px; background:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#2d6cc4; font-size:14px; }
+    .header-text h2 { font-size:18px; }
+    .header-text p { font-size:12px; opacity:0.85; }
+    .content { padding:28px; }
+    .alert-box { background:#fff3cd; border:1px solid #ffc107; padding:14px; border-radius:4px; margin-bottom:20px; font-size:13px; color:#856404; display:flex; gap:8px; align-items:flex-start; }
+    .account-info { background:#f8f9fa; border:1px solid #e0e0e0; padding:16px; border-radius:4px; margin-bottom:20px; }
+    .account-row { display:flex; justify-content:space-between; font-size:13px; padding:4px 0; }
+    .account-row span:first-child { color:#666; }
+    .account-row span:last-child { font-weight:600; color:#1b1b1b; }
+    p { font-size:14px; color:#444; margin-bottom:16px; }
+    .otp-inputs { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+    .otp-inputs input { width:52px; height:60px; border:2px solid #ddd; border-radius:6px; text-align:center; font-size:24px; font-weight:700; color:#1b1b1b; outline:none; }
+    .otp-inputs input:focus { border-color:#2d6cc4; }
+    .timer { text-align:center; font-size:13px; color:#666; margin-bottom:20px; }
+    .timer span { color:#dc3545; font-weight:700; }
+    .verify-btn { background:#2d6cc4; color:white; border:none; padding:14px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .verify-btn:hover { background:#1a5aad; }
+    .resend { text-align:center; font-size:13px; color:#666; margin-top:12px; }
+    .resend a { color:#2d6cc4; text-decoration:none; }
+    .footer { text-align:center; font-size:11px; color:#999; margin-top:16px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <div class="sbi-logo">SBI</div>
+      <div class="header-text">
+        <h2>State Bank of India</h2>
+        <p>Secure OTP Verification</p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="alert-box">
+        ⚠️ Suspicious activity detected on your account. Please verify your identity immediately to prevent account suspension.
+      </div>
+
+      <div class="account-info">
+        <div class="account-row">
+          <span>Account Number</span>
+          <span>XXXX XXXX 4821</span>
+        </div>
+        <div class="account-row">
+          <span>Account Holder</span>
+          <span>Valued Customer</span>
+        </div>
+        <div class="account-row">
+          <span>Branch</span>
+          <span>Main Branch, India</span>
+        </div>
+      </div>
+
+      <p>Enter the 6-digit OTP sent to your registered mobile number ending in <strong>XX89</strong></p>
+
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" oninput="moveNext(this,0)"/>
+        <input type="text" maxlength="1" oninput="moveNext(this,1)"/>
+        <input type="text" maxlength="1" oninput="moveNext(this,2)"/>
+        <input type="text" maxlength="1" oninput="moveNext(this,3)"/>
+        <input type="text" maxlength="1" oninput="moveNext(this,4)"/>
+        <input type="text" maxlength="1" oninput="moveNext(this,5)"/>
+      </div>
+
+      <div class="timer">OTP expires in <span id="timer">04:59</span></div>
+
+      <button class="verify-btn" onclick="verify()">Verify OTP & Secure Account</button>
+      <div class="resend">Didn't receive OTP? <a href="#">Resend OTP</a></div>
+      <div class="footer">🔒 256-bit SSL Encrypted — SBI Secure Portal</div>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+
+    const inputs = document.querySelectorAll('.otp-inputs input');
+    function moveNext(el, index) {
+      if (el.value.length === 1 && index < 5) inputs[index+1].focus();
+    }
+
+    // Countdown timer
+    let seconds = 299;
+    const timerEl = document.getElementById('timer');
+    const interval = setInterval(() => {
+      seconds--;
+      const m = Math.floor(seconds/60);
+      const s = seconds%60;
+      timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      if(seconds <= 0) clearInterval(interval);
+    }, 1000);
+
+    async function verify() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

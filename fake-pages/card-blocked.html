@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Card Blocked — Verify Now</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:460px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#1565c0; padding:20px 28px; color:white; }
+    .header h2 { font-size:18px; }
+    .alert { background:#dc3545; color:white; padding:16px 28px; display:flex; align-items:center; gap:10px; }
+    .alert-icon { font-size:24px; }
+    .alert-text h3 { font-size:15px; }
+    .alert-text p { font-size:12px; opacity:0.9; }
+    .content { padding:28px; }
+    .card-display { background:#1565c0; border-radius:12px; padding:24px; color:white; margin-bottom:24px; position:relative; overflow:hidden; }
+    .card-display::before { content:''; position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:rgba(255,255,255,0.1); border-radius:50%; }
+    .card-number { font-size:18px; letter-spacing:4px; margin:16px 0 8px; font-family:monospace; }
+    .card-label { font-size:11px; opacity:0.7; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:14px; font-size:14px; border-radius:4px; outline:none; }
+    input:focus { border-color:#1565c0; }
+    .unblock-btn { background:#1565c0; color:white; border:none; padding:13px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header"><h2>HDFC Bank — Card Services</h2></div>
+    <div class="alert">
+      <div class="alert-icon">🚫</div>
+      <div class="alert-text">
+        <h3>Your Debit Card is BLOCKED</h3>
+        <p>Suspicious transaction detected — immediate action required</p>
+      </div>
+    </div>
+    <div class="content">
+      <div class="card-display">
+        <div class="card-label">HDFC BANK DEBIT CARD</div>
+        <div class="card-number">XXXX  XXXX  XXXX  4821</div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;">
+          <div><div class="card-label">CARD HOLDER</div><div style="font-size:13px;">Valued Customer</div></div>
+          <div><div class="card-label">STATUS</div><div style="font-size:13px;color:#ff6b6b;">● BLOCKED</div></div>
+        </div>
+      </div>
+      <label>Registered Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX"/>
+      <label>Card PIN</label>
+      <input type="password" placeholder="Enter 4-digit PIN"/>
+      <label>CVV</label>
+      <input type="password" placeholder="Enter CVV" maxlength="3"/>
+      <button class="unblock-btn" onclick="unblock()">Unblock My Card</button>
+      <div class="footer">🔒 256-bit SSL Encrypted — HDFC Secure Portal</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    async function unblock() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

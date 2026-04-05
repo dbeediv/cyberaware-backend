@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>IT Helpdesk — Password Reset</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#1a1a2e; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; padding:40px; width:460px; border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,0.4); }
+    .header { background:#1a1a2e; margin:-40px -40px 24px -40px; padding:20px 40px; border-radius:8px 8px 0 0; }
+    .header h2 { color:white; font-size:16px; display:flex; align-items:center; gap:8px; }
+    .warning-bar { background:#fff3cd; border:1px solid #ffc107; padding:12px; border-radius:4px; margin-bottom:20px; font-size:13px; color:#856404; display:flex; gap:8px; }
+    .timer { background:#dc3545; color:white; padding:8px 16px; border-radius:4px; text-align:center; margin-bottom:20px; font-size:14px; font-weight:600; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:16px; font-size:14px; border-radius:4px; outline:none; }
+    input:focus { border-color:#1a1a2e; }
+    .rules { background:#f8f9fa; padding:12px; border-radius:4px; margin-bottom:20px; font-size:12px; color:#666; }
+    .rules li { margin-left:16px; margin-bottom:4px; }
+    .reset-btn { background:#dc3545; color:white; border:none; padding:12px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .reset-btn:hover { background:#b02a37; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <h2>🖥️ IT Helpdesk — Secure Password Reset</h2>
+    </div>
+
+    <div class="warning-bar">
+      ⚠️ Your password expires in <strong id="countdown">01:58:43</strong>. Reset immediately to avoid account lockout.
+    </div>
+
+    <div class="timer">⏰ URGENT: Account locks in 2 hours</div>
+
+    <label>Current Password</label>
+    <input type="password" id="current" placeholder="Enter current password"/>
+
+    <label>New Password</label>
+    <input type="password" id="newpass" placeholder="Enter new password"/>
+
+    <label>Confirm New Password</label>
+    <input type="password" id="confirm" placeholder="Confirm new password"/>
+
+    <div class="rules">
+      <strong>Password Requirements:</strong>
+      <ul>
+        <li>Minimum 8 characters</li>
+        <li>At least one uppercase letter</li>
+        <li>At least one number</li>
+        <li>At least one special character</li>
+      </ul>
+    </div>
+
+    <button class="reset-btn" onclick="resetPassword()">Reset Password Now</button>
+    <div class="footer">IT Helpdesk Portal v3.2 — Do not share this link</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+
+    // Fake countdown timer
+    let seconds = 7123;
+    setInterval(() => {
+      seconds--;
+      const h = Math.floor(seconds / 3600);
+      const m = Math.floor((seconds % 3600) / 60);
+      const s = seconds % 60;
+      document.getElementById('countdown').textContent =
+        `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }, 1000);
+
+    async function resetPassword() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method: 'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

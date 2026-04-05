@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Slack — Verify Your Identity</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Lato',Arial,sans-serif; }
+    body { background:#f8f8f8; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; padding:48px 40px; width:460px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); text-align:center; }
+    .slack-logo { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:32px; }
+    .slack-icon { width:36px; height:36px; }
+    .slack-name { font-size:26px; font-weight:700; color:#1d1c1d; }
+    h2 { font-size:22px; color:#1d1c1d; margin-bottom:8px; }
+    p { font-size:15px; color:#616061; margin-bottom:24px; line-height:1.5; }
+    .otp-inputs { display:flex; justify-content:center; gap:8px; margin-bottom:24px; }
+    .otp-inputs input { width:48px; height:56px; border:2px solid #ddd; border-radius:8px; text-align:center; font-size:24px; font-weight:700; color:#1d1c1d; outline:none; }
+    .otp-inputs input:focus { border-color:#4a154b; }
+    .verify-btn { background:#4a154b; color:white; border:none; padding:14px; width:100%; font-size:16px; cursor:pointer; border-radius:4px; font-weight:700; margin-bottom:16px; }
+    .verify-btn:hover { background:#611f69; }
+    .resend { font-size:13px; color:#616061; }
+    .resend a { color:#1264a3; text-decoration:none; }
+    .workspace { background:#f8f8f8; border-radius:4px; padding:8px 16px; display:inline-block; font-size:13px; color:#616061; margin-bottom:24px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="slack-logo">
+      <svg class="slack-icon" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" fill-rule="evenodd">
+          <path d="M19.712 26.318a3.53 3.53 0 01-3.53 3.53 3.53 3.53 0 01-3.53-3.53 3.53 3.53 0 013.53-3.53h3.53v3.53z" fill="#E01E5A"/>
+          <path d="M21.477 26.318a3.53 3.53 0 013.53-3.53 3.53 3.53 0 013.53 3.53v8.825a3.53 3.53 0 01-3.53 3.53 3.53 3.53 0 01-3.53-3.53v-8.825z" fill="#E01E5A"/>
+          <path d="M25.007 19.712a3.53 3.53 0 01-3.53-3.53 3.53 3.53 0 013.53-3.53 3.53 3.53 0 013.53 3.53v3.53h-3.53z" fill="#36C5F0"/>
+          <path d="M25.007 21.477a3.53 3.53 0 013.53 3.53 3.53 3.53 0 01-3.53 3.53h-8.825a3.53 3.53 0 01-3.53-3.53 3.53 3.53 0 013.53-3.53h8.825z" fill="#36C5F0"/>
+          <path d="M31.613 25.007a3.53 3.53 0 013.53-3.53 3.53 3.53 0 013.53 3.53 3.53 3.53 0 01-3.53 3.53h-3.53v-3.53z" fill="#2EB67D"/>
+          <path d="M29.848 25.007a3.53 3.53 0 01-3.53 3.53 3.53 3.53 0 01-3.53-3.53v-8.825a3.53 3.53 0 013.53-3.53 3.53 3.53 0 013.53 3.53v8.825z" fill="#2EB67D"/>
+          <path d="M26.318 31.613a3.53 3.53 0 013.53 3.53 3.53 3.53 0 01-3.53 3.53 3.53 3.53 0 01-3.53-3.53v-3.53h3.53z" fill="#ECB22E"/>
+          <path d="M26.318 29.848a3.53 3.53 0 01-3.53-3.53 3.53 3.53 0 013.53-3.53h8.825a3.53 3.53 0 013.53 3.53 3.53 3.53 0 01-3.53 3.53h-8.825z" fill="#ECB22E"/>
+        </g>
+      </svg>
+      <span class="slack-name">Slack</span>
+    </div>
+
+    <h2>Check your email for a code</h2>
+    <div class="workspace">🏢 cyberaware-corp.slack.com</div>
+    <p>We sent a 6-digit code to your email.<br/>The code expires in 10 minutes.</p>
+
+    <div class="otp-inputs">
+      <input type="text" maxlength="1" oninput="moveNext(this, 0)"/>
+      <input type="text" maxlength="1" oninput="moveNext(this, 1)"/>
+      <input type="text" maxlength="1" oninput="moveNext(this, 2)"/>
+      <input type="text" maxlength="1" oninput="moveNext(this, 3)"/>
+      <input type="text" maxlength="1" oninput="moveNext(this, 4)"/>
+      <input type="text" maxlength="1" oninput="moveNext(this, 5)"/>
+    </div>
+
+    <button class="verify-btn" onclick="verify()">Verify Code</button>
+    <div class="resend">Didn't receive a code? <a href="#">Resend it</a></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+
+    const inputs = document.querySelectorAll('.otp-inputs input');
+
+    function moveNext(el, index) {
+      if (el.value.length === 1 && index < 5) {
+        inputs[index + 1].focus();
+      }
+    }
+
+    async function verify() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method: 'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

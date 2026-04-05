@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SBI — KYC Verification</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f0f0f0; display:flex; justify-content:center; align-items:center; min-height:100vh; }
+    .box { background:white; width:480px; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,0.12); overflow:hidden; }
+    .header { background:#2d6cc4; padding:20px 28px; color:white; }
+    .header h2 { font-size:18px; }
+    .header p { font-size:12px; opacity:0.85; }
+    .urgent { background:#dc3545; color:white; padding:12px 28px; font-size:13px; font-weight:600; }
+    .content { padding:28px; }
+    .info { font-size:14px; color:#444; margin-bottom:20px; line-height:1.6; }
+    label { font-size:13px; color:#444; display:block; margin-bottom:4px; font-weight:500; }
+    input, select { width:100%; border:1px solid #ccc; padding:10px; margin-bottom:14px; font-size:14px; border-radius:4px; outline:none; }
+    input:focus { border-color:#2d6cc4; }
+    .submit-btn { background:#2d6cc4; color:white; border:none; padding:13px; width:100%; font-size:15px; cursor:pointer; border-radius:4px; font-weight:600; }
+    .footer { font-size:11px; color:#999; text-align:center; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="header">
+      <h2>SBI — KYC Update Required</h2>
+      <p>State Bank of India — Customer Verification Portal</p>
+    </div>
+    <div class="urgent">⚠️ Your account will be BLOCKED in 24 hours if KYC is not updated</div>
+    <div class="content">
+      <p class="info">As per RBI guidelines, all customers must complete KYC verification. Failure to update will result in immediate account suspension.</p>
+      <label>Full Name (as per bank records)</label>
+      <input type="text" placeholder="Enter your full name"/>
+      <label>Account Number</label>
+      <input type="text" placeholder="Enter account number"/>
+      <label>Date of Birth</label>
+      <input type="date"/>
+      <label>Registered Mobile Number</label>
+      <input type="tel" placeholder="+91 XXXXX XXXXX"/>
+      <label>PAN Card Number</label>
+      <input type="text" placeholder="ABCDE1234F"/>
+      <label>Aadhaar Number</label>
+      <input type="text" placeholder="XXXX XXXX XXXX"/>
+      <button class="submit-btn" onclick="submit()">Update KYC Now</button>
+      <div class="footer">🔒 Secured by SBI Digital Banking</div>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+    async function submit() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method:'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>

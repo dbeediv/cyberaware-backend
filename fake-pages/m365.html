@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Microsoft Sign In</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Arial,sans-serif; }
+    body { background:#f2f2f2; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .box { background:white; padding:44px; width:440px; box-shadow:0 2px 6px rgba(0,0,0,0.2); }
+    .ms-logo { width:108px; margin-bottom:16px; }
+    h1 { font-size:24px; font-weight:600; margin-bottom:4px; color:#1b1b1b; }
+    p { font-size:13px; color:#444; margin-bottom:20px; }
+    input { width:100%; border:none; border-bottom:1px solid #ccc; padding:8px 0; margin-bottom:20px; font-size:15px; outline:none; }
+    input:focus { border-bottom:2px solid #0067b8; }
+    .next-btn { background:#0067b8; color:white; border:none; padding:10px; width:100%; font-size:15px; cursor:pointer; }
+    .next-btn:hover { background:#005a9e; }
+    .links { display:flex; justify-content:space-between; margin-top:16px; font-size:13px; }
+    .links a { color:#0067b8; text-decoration:none; }
+    .footer { margin-top:32px; font-size:11px; color:#666; display:flex; gap:16px; }
+    .footer a { color:#666; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img class="ms-logo" src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg"/>
+    <h1>Sign in</h1>
+    <p>to continue to Microsoft 365</p>
+    <input type="email" id="email" placeholder="Email, phone, or Skype" autofocus/>
+    <div style="font-size:13px;margin-bottom:16px;">
+      No account? <a href="#" style="color:#0067b8">Create one!</a>
+    </div>
+    <button class="next-btn" onclick="nextStep()">Next</button>
+    <div class="links">
+      <a href="#">Sign-in options</a>
+    </div>
+    <div class="footer">
+      <a href="#">Terms of use</a>
+      <a href="#">Privacy & cookies</a>
+    </div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid') || 'test';
+    const cid = params.get('cid') || 'test';
+    const SERVER = 'http://localhost:3000';
+
+    let step = 1;
+
+    function nextStep() {
+      if (step === 1) {
+        document.querySelector('h1').textContent = 'Enter password';
+        document.querySelector('p').textContent = document.getElementById('email').value;
+        document.getElementById('email').type = 'password';
+        document.getElementById('email').placeholder = 'Password';
+        document.getElementById('email').value = '';
+        document.querySelector('.next-btn').textContent = 'Sign in';
+        document.querySelector('.next-btn').onclick = submitForm;
+        step = 2;
+      }
+    }
+
+    async function submitForm() {
+      await fetch(`${SERVER}/track?uid=${uid}&cid=${cid}&event=submitted`, { method: 'POST' });
+      window.location.href = `${SERVER}/caught`;
+    }
+  </script>
+</body>
+</html>
