@@ -1,0 +1,59 @@
+// routes/users.js
+// GET /api/users
+// GET /api/users/me
+// GET /api/users/:id
+const express = require('express');
+const router  = express.Router();
+const db      = require('../db');
+const { authMiddleware, requireRole } = require('../middleware/auth');
+
+router.use(authMiddleware);
+
+const SAFE_COLS = 'id, name, email, role, domain, dept, avatar, score, trend, campaigns, failed, trained, created_at';
+
+// GET /api/users — admin and trainer only
+router.get('/', requireRole('admin', 'trainer'), async (req, res) => {
+  try {
+    const r = await db.query(`SELECT ${SAFE_COLS} FROM users ORDER BY created_at DESC`);
+    res.json(r.rows);
+  } catch (err) {
+    console.error('Get users error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+// GET /api/users/me — returns currently logged-in user's profile
+router.get('/me', async (req, res) => {
+  try {
+    const r = await db.query(
+      `SELECT ${SAFE_COLS} FROM users WHERE id = $1`,
+      [req.user.id]
+    );
+    if (!r.rows.length) return res.status(404).json({ error: 'User not found' });
+    res.json(r.rows[0]);
+  } catch (err) {
+    console.error('Get me error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch user' });
+  }
+});
+
+// GET /api/users/:id
+router.get('/:id', async (req, res) => {
+  try {
+    // Regular users can only fetch their own data
+    if (req.user.role === 'user' && req.user.id !== req.params.id)
+      return res.status(403).json({ error: 'Access denied' });
+
+    const r = await db.query(
+      `SELECT ${SAFE_COLS} FROM users WHERE id = $1`,
+      [req.params.id]
+    );
+    if (!r.rows.length) return res.status(404).json({ error: 'User not found' });
+    res.json(r.rows[0]);
+  } catch (err) {
+    console.error('Get user error:', err.message);
+    res.status(500).json({ error: 'Failed to fetch user' });
+  }
+});
+
+module.exports = router;
