@@ -32,7 +32,6 @@ app.use('/api/campaigns',       require('./routes/campaigns'));
 // Member 2 — Tracking engine
 app.use('/track',      require('./routes/tracking'));
 app.use('/api/events', require('./routes/events'));
-app.use('/api/scores', require('./utils/scoring'));
 
 // Member 4 — AI phishing (must be BEFORE /api/simulate to avoid route conflict)
 app.use('/api/simulate/ai-phish', require('./routes/aiphish'));
