@@ -1,6 +1,8 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../db');
+const { authMiddleware } = require('../middleware/auth');
+router.use(authMiddleware);
 
 // GET /api/events/live — returns last 10 events
 router.get('/live', async (req, res) => {
